@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Student Orientation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #2d2d2d;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #464646;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+      }
+      h1 {
+        text-align: center;
+        color: #ff9f4d;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #6f6f6f;
+        color: #fff;
+      }
+      th {
+        background-color: #393939;
+      }
+      tr:hover {
+        background-color: #5d5d5d;
+      }
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #6f6f6f;
+        border-radius: 3px;
+        color: #fff;
+        background-color: #393939;
+      }
+      .calculate-button {
+        margin-top: 10px;
+        padding: 5px 10px;
+        background-color: #ff9f4d;
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .result {
+        margin-top: 20px;
+        color: #fff;
+      }
+      .orientation:hover {
+        background-color: #ff9f4d;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Student Orientation</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Note Informatique</th>
+            <th>Note Math</th>
+            <th>Note Physique</th>
+            <th>Moyenne</th>
+            <th>Orientation</th>
+          </tr>
+        </thead>
+        <tbody id="student-table-body">
+          <tr>
+            <td><input type="text" class="nom-input" /></td>
+            <td><input type="text" class="prenom-input" /></td>
+            <td><input type="number" class="informatique-input" /></td>
+            <td><input type="number" class="math-input" /></td>
+            <td><input type="number" class="physique-input" /></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="calculate-button" onclick="calculateMoyenne()">
+        Calculate
+      </button>
+      <button class="add-student-button" onclick="addStudent()">
+        Add Student
+      </button>
+      <div class="result" id="result"></div>
+    </div>
+
+    <script>
+      function calculateMoyenne() {
+        var rows = document
+          .getElementById("student-table-body")
+          .getElementsByTagName("tr");
+        var resultDiv = document.getElementById("result");
+
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          var nom = row.getElementsByClassName("nom-input")[0].value;
+          var prenom = row.getElementsByClassName("prenom-input")[0].value;
+          var informatique = parseFloat(
+            row.getElementsByClassName("informatique-input")[0].value
+          );
+          var math = parseFloat(
+            row.getElementsByClassName("math-input")[0].value
+          );
+          var physique = parseFloat(
+            row.getElementsByClassName("physique-input")[0].value
+          );
+
+          var moyenne = (informatique + math + physique) / 3;
+
+          row.cells[5].textContent = moyenne.toFixed(2);
+
+          if (!isNaN(moyenne)) {
+            var orientationCell = row.cells[6];
+
+            if (moyenne >= 12 && math >= 12 && physique >= 10) {
+              orientationCell.textContent = "Math Applique";
+              orientationCell.classList.add("orientation");
+            } else if (moyenne >= 12 && informatique >= 14 && math >= 10) {
+              orientationCell.textContent = "Genie Logiciel";
+              orientationCell.classList.add("orientation");
+            } else if (moyenne >= 10 && physique >= 10) {
+              orientationCell.textContent = "Energie et Science de l'Ingenieur";
+              orientationCell.classList.add("orientation");
+            } else {
+              orientationCell.textContent = "-";
+            }
+          }
+        }
+
+        resultDiv.textContent = "Calculation completed.";
+      }
+      function addStudent() {
+        var tableBody = document.getElementById("student-table-body");
+
+        var newRow = document.createElement("tr");
+        newRow.innerHTML = `
+        <td><input type="text" class="nom-input" /></td>
+        <td><input type="text" class="prenom-input" /></td>
+        <td><input type="number" class="informatique-input" /></td>
+        <td><input type="number" class="math-input" /></td>
+        <td><input type="number" class="physique-input" /></td>
+        <td></td>
+        <td></td>
+      `;
+
+        tableBody.appendChild(newRow);
+        studentCount++;
+      }
+    </script>
+  </body>
+</html>

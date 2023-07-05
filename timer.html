@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Countdown Timer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #282c34;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .timer-container {
+        text-align: center;
+      }
+      .timer-input {
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      .start-button,
+      .reset-button {
+        padding: 10px 20px;
+        background-color: #61dafb;
+        border: none;
+        border-radius: 3px;
+        color: #282c34;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .reset-button {
+        margin-left: 10px;
+        background-color: #ff8e3c;
+      }
+      .timer-value {
+        font-size: 48px;
+      }
+      .timer-finished {
+        font-size: 24px;
+        color: #ff8e3c;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="timer-container">
+      <input
+        type="number"
+        class="timer-input"
+        placeholder="Enter duration (minutes)"
+      />
+      <div class="timer-value" id="timer-value">00:00</div>
+      <button class="start-button" onclick="startTimer()">Start</button>
+      <button class="reset-button" onclick="resetTimer()">Reset</button>
+      <div class="timer-finished" id="timer-finished"></div>
+    </div>
+
+    <script>
+      var timerValueElem = document.getElementById("timer-value");
+      var timerFinishedElem = document.getElementById("timer-finished");
+      var intervalId;
+
+      function startTimer() {
+        var inputElem = document.querySelector(".timer-input");
+        var duration = parseInt(inputElem.value);
+
+        if (isNaN(duration) || duration <= 0) {
+          alert("Please enter a valid duration (in minutes).");
+          return;
+        }
+
+        var endTime = new Date().getTime() + duration * 60000;
+
+        intervalId = setInterval(function () {
+          var now = new Date().getTime();
+          var distance = endTime - now;
+
+          if (distance <= 0) {
+            clearInterval(intervalId);
+            timerValueElem.textContent = "00:00";
+            timerFinishedElem.textContent = "Time's up!";
+            playAlertSound();
+          } else {
+            var minutes = Math.floor(
+              (distance % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            var minutesStr = minutes.toString().padStart(2, "0");
+            var secondsStr = seconds.toString().padStart(2, "0");
+
+            timerValueElem.textContent = minutesStr + ":" + secondsStr;
+          }
+        }, 1000);
+      }
+
+      function resetTimer() {
+        clearInterval(intervalId);
+        timerValueElem.textContent = "00:00";
+        timerFinishedElem.textContent = "";
+      }
+
+      function playAlertSound() {
+        // Implement sound playing logic here
+      }
+    </script>
+  </body>
+</html>

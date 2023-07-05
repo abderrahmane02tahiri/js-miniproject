@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Product Price Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #1e1e1e;
+        color: #fff;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #333;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+      h2 {
+        text-align: center;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+      }
+      label {
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+      input {
+        padding: 5px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 3px;
+      }
+      select {
+        padding: 5px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 3px;
+      }
+      button {
+        padding: 8px 12px;
+        background-color: #ff6400;
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .result {
+        margin-top: 20px;
+      }
+      .result p {
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Product Price Calculator</h2>
+      <form onsubmit="calculatePrice(event)">
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" required />
+        <label for="category">Category:</label>
+        <select id="category" required>
+          <option value="">Select a category</option>
+          <option value="electronics">Electronics</option>
+          <option value="clothing">Clothing</option>
+          <option value="books">Books</option>
+        </select>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" required />
+        <button type="submit">Calculate</button>
+      </form>
+      <div class="result" id="result" style="display: none">
+        <p>
+          Price without Taxes per unit: <span id="price-without-taxes"></span>
+        </p>
+        <p>Price with Taxes per unit: <span id="price-with-taxes"></span></p>
+        <p>Total Price with Taxes: <span id="total-price"></span></p>
+        <p>Date of Order: <span id="order-date"></span></p>
+      </div>
+    </div>
+
+    <script>
+      function calculatePrice(event) {
+        event.preventDefault();
+
+        var productName = document.getElementById("product-name").value;
+        var category = document.getElementById("category").value;
+        var quantity = parseInt(document.getElementById("quantity").value);
+        var taxRate = getTaxRate(category);
+        var priceWithoutTaxes = getPriceWithoutTaxes(category);
+        var priceWithTaxes = calculatePriceWithTaxes(
+          priceWithoutTaxes,
+          taxRate
+        );
+        var totalPrice = calculateTotalPrice(priceWithTaxes, quantity);
+        var orderDate = getCurrentDate();
+
+        document.getElementById("price-without-taxes").textContent =
+          priceWithoutTaxes.toFixed(2);
+        document.getElementById("price-with-taxes").textContent =
+          priceWithTaxes.toFixed(2);
+        document.getElementById("total-price").textContent =
+          totalPrice.toFixed(2);
+        document.getElementById("order-date").textContent = orderDate;
+
+        document.getElementById("result").style.display = "block";
+      }
+
+      function getTaxRate(category) {
+        var taxRates = {
+          electronics: 0.15,
+          clothing: 0.1,
+          books: 0.05,
+        };
+
+        return taxRates[category];
+      }
+
+      function getPriceWithoutTaxes(category) {
+        var prices = {
+          electronics: 100,
+          clothing: 50,
+          books: 20,
+        };
+
+        return prices[category];
+      }
+
+      function calculatePriceWithTaxes(priceWithoutTaxes, taxRate) {
+        return priceWithoutTaxes * (1 + taxRate);
+      }
+
+      function calculateTotalPrice(priceWithTaxes, quantity) {
+        return priceWithTaxes * quantity;
+      }
+
+      function getCurrentDate() {
+        var currentDate = new Date();
+        return currentDate.toLocaleDateString();
+      }
+    </script>
+  </body>
+</html>
